@@ -1,4 +1,4 @@
-# TheMazeGame-
+# TheMazeGame
 This is a game programmed in C++
 
 Programming techniques used (and many more):
