@@ -22,4 +22,6 @@ In this game the user (green character) tries to find the red diamond located in
 
 Feel free to improve the game as long as you keep the source code free for everyone to see and use! 
 
-Many more features to come...
+Potential updates:
+  second player using wasd keys
+  better cpu algorithm
