@@ -1,19 +1,21 @@
 # TheMazeGame
-This is a game programmed in C++
+This is a game programmed in C++ Programming Language
 
-Programming techniques used (and many more):
+Programming techniques used:
 1.  file handling
 2.  ncurses library (on linux os)
 3.  Object Oriented Programming
 4.  arrays
+5.  many more...
 
-version 3 last edit 02/11/2022
+   
+version 3.4 last edit 15/07/2023
 
 In this game the user (green character) tries to find the red diamond located in the maze before his oponent (orange character)
 
 -Important:
 
-1.  The source code comes with two .txt files <<easy.txt>> and <<hard.txt>>. Depending on the file the user selects, the dificulty of the game is set. To select file, run command ./main -lncurses 'level.txt'
+1.  The source code comes with two .txt files <<easy.txt>> and <<hard.txt>>. Depending on the file the user selects, the dificulty of the game is set. To select file, run command ./main <level name>
 2.  The user controls the green character using cursor keys to move up, down, left or right and space to stay in the same position
 3.  For every move the user decides, the computer responds by making one move
 4.  During the game, the user can 'surrender' by pressing Esc, this option, however, gives the victory to the oponent.
