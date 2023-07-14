@@ -1,18 +1,17 @@
 
 /*
-Catch Me
+Maze Game
 
 using ncurses in linux os
 
-last edit: 12/09/2022 v3
-GitHub: https://github.com/giapapad
+last edit: 14/07/2023 v3.4
 */
 
 #include <ctime>
 #include <iostream>
 #include <stdlib.h>
 #include <fstream>
-#include <ncurses.h>
+#include <ncurses.h>  
 #include <unistd.h>
 
 using namespace std;
@@ -20,10 +19,9 @@ using namespace std;
 //get maze width to init maze array
 int get_maze_width(string filename)
 {
-
     int width = 0;
     fstream file;
-    file.open(filename, ios::in | ios::out);
+    file.open(filename, ios::in);
     while (file.get() != '\n')
     {
         width++;//increase width one time for every character that is not \n
@@ -122,12 +120,11 @@ class Engine
 public:
 
     //method prototype
-    void start_game(string filename);
+    int start_game(string filename);
 };
 
-void Engine::start_game(string filename)
+int Engine::start_game(string filename)
 {
-
     srand(time(NULL));
     WINDOW *win;
     User user;
@@ -139,8 +136,6 @@ void Engine::start_game(string filename)
     char maze[height][width]; // init maze array
     char buffer[width];       // init buffer array
 
-    // cout << width << " " << height << endl;//debug
-
     //file handling
     fstream file;
     file.open(filename, ios::in | ios::out);
@@ -151,13 +146,12 @@ void Engine::start_game(string filename)
         file.getline(buffer, 100);
         for (int j = 0; j < width; j++)
         {
-            maze[i][j] = buffer[j];
-            // cout << buffer[j]; //debug
+            maze[i][j] = buffer[j]; 
         }
-        cout << endl;
     }
 
     //randomise starting position
+
     //random int number from 1 to border -1
     user.x = rand() % height;
     user.y = rand() % width;
@@ -185,12 +179,8 @@ void Engine::start_game(string filename)
         diamond.pos_y = rand() % width;
     }
 
-    cout << endl;
-    cout << endl;
-
     //init screen
     initscr();
-    //noecho();
     cbreak();
 
     //check if terminal supports color 
@@ -198,7 +188,7 @@ void Engine::start_game(string filename)
     {
         endwin();
         cout << "Terminal does not support color!" << endl;
-        exit(1);
+        return 1;
     }
 
     char username[30];
@@ -248,8 +238,9 @@ void Engine::start_game(string filename)
         maze[user.pos_x][user.pos_y] = 'M';
         maze[diamond.pos_x][diamond.pos_y] = 'D';
 
+        printw("\t");
         attron(COLOR_PAIR(5));
-        printw("\tWelcome %s\n", username);
+        printw("Good Luck Player!!\n");
         attroff(COLOR_PAIR(5));
 
         //create colored map from the array
@@ -293,32 +284,32 @@ void Engine::start_game(string filename)
         int c = getch();
         switch (c)
         {
-        case KEY_UP:
-            user.go_up();
-            break;
-        case KEY_DOWN:
-            user.go_down();
-            break;
-        case KEY_LEFT:
-            user.go_left();
-            break;
-        case KEY_RIGHT:
-            user.go_right();
-            break;
-        case ' ':
-            user.stay();
-            break;
-        case 'q':
-            endwin();
-            printw("Player Quited!!\n");
-            printw("Press any key to continue (NOT power button)");
-            getch();
-            flag = !flag;//end game when q is pressed
-            break;
-        case 27:
-            flag = !flag;//end game when Esc is pressed
-            cout<<"EXIT"<<endl;
-            break;
+            case KEY_UP:
+                user.go_up();
+                break;
+            case KEY_DOWN:
+                user.go_down();
+                break;
+            case KEY_LEFT:
+                user.go_left();
+                break;
+            case KEY_RIGHT:
+                user.go_right();
+                break;
+            case ' ':
+                user.stay();
+                break;
+            case 'q':
+                endwin();
+                printw("Player Quited!!\n");
+                printw("Press any key to continue (NOT power button)");
+                getch();
+                flag = !flag;//end game when q is pressed
+                break;
+            case 27:
+                flag = !flag;//end game when Esc is pressed
+                cout<<"EXIT"<<endl;
+                break;
         }
 
         //move cpu player
@@ -389,6 +380,7 @@ void Engine::start_game(string filename)
         }
     }
     endwin();//end the window
+    return 0;
 }
 
 int main(int argc, char *argv[])
@@ -398,9 +390,18 @@ int main(int argc, char *argv[])
 
     Engine game;//create the game
 
-    game.start_game(filename);//start the game
+    cout<<"GAME STARTING..."<<endl;
 
-    cout<<"GAME FINISHED SUCCESSFULLY!"<<endl;
-
+    try{
+        int error = 0;
+        if (game.start_game(filename) == 0){//start the game
+            cout<<"GAME FINISHED SUCCESSFULLY!"<<endl;
+        }else{
+            error = 1;
+            throw(error);
+        }
+        }catch(int er){
+            cout<<"GAME ENDED UNEXPECTEDLY"<<endl;
+        }   
     return 0;
 }
